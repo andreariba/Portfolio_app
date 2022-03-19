@@ -1,6 +1,7 @@
 # Portfolio Dashboard
 
 Visualize the current value and simulate the future evolution of the input Portfolio.
+The repository is a personal test of different python libraries dash, copula, and pandas_datareader. 
 
 ## The portfolio
 

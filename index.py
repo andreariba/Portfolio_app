@@ -44,7 +44,8 @@ def download_data():
   delta_1d = datetime.timedelta(days=1)
   a_year_ago = today-delta_1y
 
-  symbols = list(stocks.keys())
+  symbols = list(set(stocks.keys()))
+  print(symbols)
   raw_data_price = pdr.get_data_yahoo(symbols, start=a_year_ago, end=today)
   raw_close_price = raw_data_price.iloc[:, raw_data_price.columns.get_level_values(0) == 'Close']
   raw_close_price.columns = raw_close_price.columns.droplevel()
