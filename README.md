@@ -1,6 +1,6 @@
 # Portfolio Dashboard
 
-Visualize the current value and simulate the future evolution of the input Portfolio (just for fun to build dashboards in Python).
+Visualize the current value and simulate the future evolution of the input Portfolio.
 
 ## The portfolio
 
