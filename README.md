@@ -1,6 +1,6 @@
 # Portfolio Dashboard
 
-Visualize the current value and simulate the future evolution of the input Portfolio.
+Visualize the current value and simulate the future evolution of the input Portfolio (just for fun to build dashboards in Python).
 
 ## The portfolio
 
@@ -22,6 +22,6 @@ The dashboard includes 3 pages (/apps).
  2. Allocation. A comparison of the percentages of asset types in the portfolio in the last year. Useful in case you are adopting a rebalancing strategy.
 ![allocation_screenshot](imgs/allocation.png)
 
- 3. Forecast. Very simple simulation of the future values of each assets and of the overall portfolio. The simulation are based on the estimation of the Copula of the multivariate distribution of percentage changes in the previous year.
+ 3. Forecast. Very simple simulation of the future values of each assets and of the overall portfolio. The simulation are based on the estimation of the Copula of the multivariate distribution of percentage changes in the previous year (so trust them for what they are).
 ![forecast_screenshot](imgs/forecast.png)
 
