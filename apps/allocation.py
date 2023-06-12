@@ -3,16 +3,11 @@ import dash_bootstrap_components as dbc
 from dash import dcc
 from dash import html
 
-import plotly.express as px
-import plotly.graph_objects as go
-
 
 from utils.Portfolio import PortfolioManager, PortfolioSimulation, create_allocation_figures
 
 pm = PortfolioManager()
 ps = PortfolioSimulation(pm)
-
-
 
 fig_piesector, fig_sector_growth, fig_piesector_initial = create_allocation_figures(pm)
 

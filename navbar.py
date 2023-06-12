@@ -4,6 +4,7 @@ def Navbar():
 
   navbar = dbc.NavbarSimple(
     children = [
+      dbc.NavItem(dbc.NavLink("Overview", href="overview")),
       dbc.NavItem(dbc.NavLink("Allocation", href="allocation")),
       dbc.NavItem(dbc.NavLink("Forecast", href="forecast")),
       dbc.NavItem(dbc.NavLink("Home", href="home")),

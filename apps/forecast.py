@@ -35,7 +35,7 @@ body = dbc.Container(
               options=[
                 {'label':i, 'value':i} for i in tickers
               ],
-              value=tickers,
+              value=tickers[0],
               placeholder="Select an asset"
             ),
             dcc.Graph( id='asset_forecast' ),

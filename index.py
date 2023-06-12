@@ -6,6 +6,7 @@ from dash import dash_table
 import dash_bootstrap_components as dbc
 
 from apps.homepage import Homepage
+from apps.overview import Overview
 from apps.allocation import Allocation
 from apps.forecast import Forecast
 from navbar import Navbar
@@ -28,13 +29,16 @@ ps = PortfolioSimulation(pm)
 
 #create app pages
 home_page = Homepage()
+overview_page = Overview()
 forecast_page = Forecast()
 allocation_page = Allocation()
 
 @app.callback( Output('page-content','children'), [Input('url','pathname')] )
 def display_page(pathname):
   print(pathname)
-  if pathname=='/forecast':
+  if pathname=='/overview':
+    return overview_page
+  elif pathname=='/forecast':
     return forecast_page
   elif pathname=='/allocation':
     return allocation_page
