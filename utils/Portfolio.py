@@ -113,7 +113,6 @@ class PortfolioManager(metaclass=Singleton):
         return copy.deepcopy(self._pct_values)
     
 
-
 class PortfolioSimulation:
     
     def __init__(self, portfolio_manager, n_simulations=200, trading_days=253):
@@ -211,7 +210,6 @@ class PortfolioSimulation:
         self._data_pct = data_pct
         self._simulations = simulations
         return
-
 
 
 class HomepageFigures:
