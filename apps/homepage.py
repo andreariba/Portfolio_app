@@ -4,31 +4,24 @@ from dash import dcc
 from dash import html
 from dash import dash_table
 
-from utils.Portfolio import PortfolioManager, HomepageFigures
+from utils.DBmanager import PortfolioDB
+
+pdb = PortfolioDB()
 
 body = dbc.Container(
   [
-    dbc.Row(
-      [
-        dbc.Col(
-          [        
-            dcc.Dropdown(
-              id='portfolio_select',
-              options=[
-                {'label': f"my_{i}", 'value':i} for i in range(3)
-              ],
-              value='',
-              placeholder="Select a portfolio"
-            ),
-          ], width=7,
+    html.Div(
+      [      
+        dcc.Dropdown(
+          id='portfolio_select',
+          options=[
+            {'label': i, 'value':i} for i in pdb.portfolios+['Add new portfolio']
+          ],
+          value='',
+          placeholder="Select a portfolio"
         ),
-        dbc.Col(
-          [        
-                        html.P('Add new portfolio')
-          ], width=5, align='center', style={'marginLeft': 'auto', 'marginRight': 'auto'},
-        ),
-      ], justify='center',
-    )
+      ], style={'display': 'inline-block', 'width': '100%', 'height': '100%', 'verticalAlign': 'middle'}
+    ),
   ]
 )
 

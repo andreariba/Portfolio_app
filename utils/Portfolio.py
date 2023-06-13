@@ -90,9 +90,11 @@ class PortfolioManager(metaclass=Singleton):
                              password='password'
                             )
         
-        db = client["portfolio"]
+        db = client["utils"]
         
         self.sectors = db["sectors"].find()[0]
+        
+        db = client["portfolio"]
         
         portfolio_colletion = db["main"]
         
@@ -158,7 +160,7 @@ class PortfolioSimulation:
         data_pct = round(pct_values,2)
         data_price = round(asset_values,2)
 
-        least_recent_date = data_price.index.min()
+        #least_recent_date = data_price.index.min()
         most_recent_date = data_price.index.max()
 
         univariate = Univariate(parametric=ParametricType.PARAMETRIC)

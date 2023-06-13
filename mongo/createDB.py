@@ -6,8 +6,9 @@ client = MongoClient("mongodb://localhost:27017/",
                      password='password'
                      )
 
+
 # Access a database
-db = client["portfolio"]
+db = client["utils"]
 
 # access a collection with the sector mappings
 collection = db["sectors"]
@@ -21,6 +22,9 @@ sectors = {
     "SECTOR_5": "Currency"
 }
 collection.insert_one(sectors)
+
+# Access a database
+db = client["portfolio"]
 
 # Access a collection
 collection = db["main"]
