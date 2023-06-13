@@ -27,12 +27,22 @@ collection.insert_one(sectors)
 db = client["portfolio"]
 
 # Access a collection
-collection = db["main"]
+collection = db["Example"]
 
 # Insert multiple documents
 documents = [
     {"ticker": "CSSPX.MI", "shares": 25, "currency": "EUR", "sector": "SECTOR_0"},
     {"ticker": "ETH-USD", "shares": 29.40497366, "currency": "USD", "sector": "SECTOR_4"}
+]
+collection.insert_many(documents)
+
+# Access a collection
+collection = db["Example_2"]
+
+# Insert multiple documents
+documents = [
+    {"ticker": "CSSX5E.MI", "shares": 30, "currency": "EUR", "sector": "SECTOR_0"},
+    {"ticker": "PHPM.MI", "shares": 10, "currency": "EUR", "sector": "SECTOR_3"}
 ]
 collection.insert_many(documents)
 
