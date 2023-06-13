@@ -4,41 +4,39 @@ from dash import dcc
 from dash import html
 
 
-from utils.Portfolio import PortfolioManager, PortfolioSimulation, create_allocation_figures
+def Allocation(pdb):
 
-pm = PortfolioManager()
-ps = PortfolioSimulation(pm)
+  cg = pdb.current_content
 
-fig_piesector, fig_sector_growth, fig_piesector_initial = create_allocation_figures(pm)
+  fig_piesector = cg.allocation_piesector
+  fig_sector_growth = cg.allocation_sector_growth
+  fig_piesector_initial = cg.allocation_piesector_initial
 
-body = dbc.Container(
-  [
-    html.H2("Allocation"),
-    dbc.Row(
-      [
-        dbc.Col(
-          [        
-            dcc.Graph( id='total_capital',figure=fig_piesector_initial )
-          ], width=3,
-        ),
-        dbc.Col(
-          [        
-            dcc.Graph( id='capital_by_sector',figure=fig_sector_growth )
-          ], width=6,
-        ),
-        dbc.Col(
-          [
-            dcc.Graph( id='pie_chart_assets',figure=fig_piesector ),
-          ], width=3,
-        ),
-      ]
-    )
-  ],
-className="mt-4",
-)
+  body = dbc.Container(
+    [
+      dbc.Row(
+        [
+          dbc.Col(
+            [        
+              dcc.Graph( id='total_capital',figure=fig_piesector_initial )
+            ], width=3,
+          ),
+          dbc.Col(
+            [        
+              dcc.Graph( id='capital_by_sector',figure=fig_sector_growth )
+            ], width=6,
+          ),
+          dbc.Col(
+            [
+              dcc.Graph( id='pie_chart_assets',figure=fig_piesector ),
+            ], width=3,
+          ),
+        ]
+      )
+    ],
+  className="mt-4",
+  )
 
-
-def Allocation():
   layout = html.Div([
     body
   ])
