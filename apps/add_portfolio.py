@@ -6,6 +6,8 @@ from dash import dash_table
 
 
 def New_Portfolio(pdb):
+
+  #pdb.
   
   body = dbc.Container(
     [
@@ -15,7 +17,7 @@ def New_Portfolio(pdb):
           dbc.Col(
             [
                 html.P("Add ticker"),
-                html.P("Ticker"),
+                html.P("Ticker (Yahoo Finance)"),
                 dbc.Input(id='ticker-name'),
                 html.P("Shares"),
                 dbc.Input(id='ticker-shares'),

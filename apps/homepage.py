@@ -15,16 +15,20 @@ def Homepage(pdb):
             options=[
               {'label': i, 'value':i} for i in pdb.portfolios+['Add new portfolio']
             ],
-            value='Example',
+            value=pdb.current_portfolio.name,
             placeholder="Select a portfolio",
           ),
           dbc.Button(
             "Select",
-            id='portfolio_select_button', #disabled=True, False
+            id='portfolio_select_button',
+          ),
+          dbc.Button(
+            "Modify",
+            id='portfolio_modify_button',
           ),
           dbc.Button(
             "Delete",
-            id='portfolio_delete_button', #disabled=True, False
+            id='portfolio_delete_button',
           ),
           html.Div(id='selected_portfolio'),
         ], style={'display': 'inline-block', 'width': '100%', 'height': '100%', 'verticalAlign': 'middle', 'textAlign': 'center'},

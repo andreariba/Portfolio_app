@@ -26,6 +26,7 @@ app.layout = html.Div([
   Navbar(),
   html.Div(id='page-content')
 ])
+app.title = 'PortfolioApp'
 
 pdb = PortfolioDB()
 pdb.get_portfolio('Example')
