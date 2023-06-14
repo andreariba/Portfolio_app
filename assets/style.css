@@ -1,0 +1,16 @@
+body {
+    margin: 0px;
+  }
+
+img {
+  margin: 40px;
+}
+
+button {
+  margin: 10px;
+}
+
+#col {
+  margin: 40 px;
+  vertical-align: middle;
+}

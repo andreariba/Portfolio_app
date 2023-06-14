@@ -86,12 +86,11 @@ class YFBridge:
 
 
 
-class PortfolioManager:
+class Portfolio:
     
     def __init__(self, name) -> None:
         
         self._name = name
-        self.sectors = self._get_sectors()
         self.tickers = []
         self._asset_values = None
         self._pct_values = None
@@ -116,17 +115,6 @@ class PortfolioManager:
             df = df.append(ticker.dict, ignore_index=True)
         return df
     
-    def _get_sectors(self):
-        
-        from pymongo import MongoClient
-        client = MongoClient("mongodb://localhost:27017/",
-                             username='admin',
-                             password='password'
-                            )
-        db = client["utils"] 
-        
-        return db["sectors"].find()[0]
-    
     def add_Ticker(self, ticker):
         if isinstance(ticker, Ticker):
             self.tickers.append(ticker)
@@ -135,7 +123,6 @@ class PortfolioManager:
             
     def generate(self):
         self._asset_values, self._pct_values = YFBridge.download_data(self.tickers)
-    
     
     
 
@@ -236,128 +223,18 @@ class PortfolioSimulation:
         self._data_pct = data_pct
         self._simulations = simulations
         return
+    
 
-
-
-
-class PortfolioDB(metaclass=Singleton):
-
-    def __init__(self) -> None:
-        
-        self.portfolios = []
-        self.get_current_portfolio_list()
-        self._current_PortfolioManager = None
-        self._current_PortfolioSimulation = None
-        self._current_ContentGenerator = None
-
-        return
-    
-    @property
-    def current_portfolio(self):
-        return self._current_PortfolioManager
-    
-    @property
-    def current_simulation(self):
-        return self._current_PortfolioSimulation
-    
-    @property
-    def current_content(self):
-        return self._current_ContentGenerator
-    
-    def _connect(self):
-        from pymongo import MongoClient
-        
-        client = MongoClient("mongodb://localhost:27017/",
-                             username='admin',
-                             password='password'
-                            )
-        return client
-    
-    def get_current_portfolio_list(self):
-        
-        client = self._connect()
-        
-        db = client["portfolio"]
-
-        self.portfolios = []
-        for portfolio in db.list_collections():
-            self.portfolios.append(portfolio['name'])
-        
-        return self.portfolios
-    
-    def set_portfolio(self, pm):
-        
-        pm.generate()
-        self._current_PortfolioManager = pm
-        
-        ps = PortfolioSimulation(pm)
-        self._current_PortfolioSimulation = ps
-        
-        cg = ContentGenerator(pm, ps)
-        self._current_ContentGenerator = cg
-        
-        return
-    
-    def get_portfolio(self, name):
-        
-        self.get_current_portfolio_list()
-        if name not in self.portfolios:
-            raise ValueError(f"'{name}' portfolio not in the db")
-                
-        pm = PortfolioManager(name)
-        
-        client = self._connect()
-        
-        db = client["portfolio"]
-        portfolio_colletion = db[name]
-        
-        ticker_list = portfolio_colletion.find()
-        for t in ticker_list:
-            pm.add_Ticker(Ticker(t))
-        
-        self.set_portfolio(pm)
-        
-        return pm
-    
-    def delete_portfolio(self, name):
-        
-        client = self._connect()
-        
-        db = client["portfolio"]
-        
-        db[name].drop()
-        
-        self.get_current_portfolio_list()
-        
-        return
-    
-    def store_new_portfolio(self, pm):
-        
-        client = self._connect()
-        
-        db = client["portfolio"]
-        
-        if pm.name in db.list_collection_names():
-            raise ValueError("Portfolios must have unique names.")
-
-        collection = db[pm.name]
-        
-        for ticker in pm.tickers:
-            collection.insert_one(ticker.dict)
-            
-        self.get_current_portfolio_list()
-        
-        return
-    
 
 class ContentGenerator:
     
-    def __init__(self, portfolio_manager, portfolio_simulation):
+    def __init__(self, portfolio, portfolio_simulation, sectors):
         
-        self.portfolio_manager = portfolio_manager
+        self.portfolio = portfolio
         self.portfolio_simulation = portfolio_simulation
         
-        self.stock_sectors = { ticker.ticker:ticker.sector for ticker in self.portfolio_manager.tickers }
+        self.sectors = sectors
+        self.stock_sectors = { ticker.ticker:ticker.sector for ticker in self.portfolio.tickers }
         
         self._homepage_capital_growth = None
         self._homepage_loser_gainer_df = None
@@ -418,16 +295,17 @@ class ContentGenerator:
         self._generate_forecast_portfolio_figure()
         
         return
-    
+
+
     def _generate_homepage_capital_growth(self):
         
         import plotly.express as px
 
-        asset_values = self.portfolio_manager.asset_values
-        pct_values = self.portfolio_manager.pct_values
+        asset_values = self.portfolio.asset_values
+        pct_values = self.portfolio.pct_values
 
         melted_asset_values = asset_values.melt(ignore_index=False).reset_index()
-        melted_asset_values['sector'] = melted_asset_values['variable'].map(self.stock_sectors).map(self.portfolio_manager.sectors)
+        melted_asset_values['sector'] = melted_asset_values['variable'].map(self.stock_sectors).map(self.sectors)
         melted_asset_values = melted_asset_values.sort_values(by='sector')
 
         fig_capital_growth = px.line(melted_asset_values.groupby('Date').sum(),labels=dict(Date="Last year", _value="Capital (EUR)"))
@@ -436,13 +314,12 @@ class ContentGenerator:
         self._homepage_capital_growth = fig_capital_growth
         return
 
+
     def _generate_homepage_loser_gainer_df(self):
         
         import pandas as pd
-        import numpy as np
         
-        asset_values = self.portfolio_manager.asset_values
-        pct_values = self.portfolio_manager.pct_values
+        asset_values = self.portfolio.asset_values
         
         asset_1y_perfomance = ((asset_values.iloc[-1]/asset_values.iloc[0]-1)*100)
         asset_1y_perfomance = round(asset_1y_perfomance,2)
@@ -450,15 +327,16 @@ class ContentGenerator:
         loser_gainer_df.columns = ['Losers', '% change (losers)','Gainers', '% change (gainers)']
         
         self._homepage_loser_gainer_df = loser_gainer_df
+
         return
-        
+    
+    
     def _generate_homepage_perfomance_df(self):
         
         import pandas as pd
         import numpy as np
         
-        asset_values = self.portfolio_manager.asset_values
-        pct_values = self.portfolio_manager.pct_values
+        asset_values = self.portfolio.asset_values
 
         portfolio_value = asset_values.sum(axis=1)
         last_year_perfomance = round((portfolio_value.iloc[-1]/portfolio_value.iloc[0]-1)*100,2)
@@ -469,18 +347,19 @@ class ContentGenerator:
         perfomance_df = pd.DataFrame.from_dict( {'Perfomance (%)':[last_year_perfomance], 'Volatility (%)':[volatility]})
         
         self._homepage_perfomance_df = perfomance_df
+
         return
     
+
     def _generate_allocation_figures(self):
 
         import plotly.express as px
         import plotly.graph_objects as go
 
-        asset_values = self.portfolio_manager.asset_values
-        pct_values = self.portfolio_manager.pct_values
+        asset_values = self.portfolio.asset_values
 
         melted_asset_values = asset_values.melt(ignore_index=False).reset_index()
-        melted_asset_values['sector'] = melted_asset_values['variable'].map(self.stock_sectors).map(self.portfolio_manager.sectors)
+        melted_asset_values['sector'] = melted_asset_values['variable'].map(self.stock_sectors).map(self.sectors)
         melted_asset_values = melted_asset_values.sort_values(by='sector')
 
         most_recent_date = melted_asset_values['Date'].max()
@@ -503,6 +382,7 @@ class ContentGenerator:
         self._allocation_piesector = fig_piesector
         self._allocation_sector_growth = fig_sector_growth
         self._allocation_piesector_initial = fig_piesector_initial
+
         return
 
     
@@ -518,7 +398,6 @@ class ContentGenerator:
 
         portfolio_simulations = simulations.sum(axis=1)
         portfolio_median = np.median(portfolio_simulations, axis=1)
-        portfolio_std = portfolio_simulations.std(axis=1)
         portfolio_q95 = np.quantile(portfolio_simulations, q=0.95, axis=1)
         portfolio_q05 = np.quantile(portfolio_simulations, q=0.05, axis=1)
 
@@ -591,7 +470,6 @@ class ContentGenerator:
         data_price = self.portfolio_simulation.data_price
 
         simulated_medians = np.median(simulations, axis=2)
-        simulated_stds = np.std(simulations, axis=2)
         simulated_q95 = np.quantile(simulations, q=0.95, axis=2)
         simulated_q05 = np.quantile(simulations, q=0.05, axis=2)
 
@@ -650,3 +528,139 @@ class ContentGenerator:
         perfomance_df.columns.values[0] = ''
 
         return fig, perfomance_df
+    
+
+
+
+class PortfolioDB(metaclass=Singleton):
+
+    def __init__(self) -> None:
+        
+        self.portfolios = []
+        self.sectors = self._get_sectors()
+        self.currencies = self._get_currencies()
+        self.get_current_portfolio_list()
+        self._current_Portfolio = None
+        self._current_PortfolioSimulation = None
+        self._current_ContentGenerator = None
+
+        return
+    
+    @property
+    def current_portfolio(self):
+        return self._current_Portfolio
+    
+    @property
+    def current_simulation(self):
+        return self._current_PortfolioSimulation
+    
+    @property
+    def current_content(self):
+        return self._current_ContentGenerator
+    
+    def _connect(self):
+        from pymongo import MongoClient
+        
+        client = MongoClient("mongodb://localhost:27017/",
+                             username='admin',
+                             password='password'
+                            )
+        return client
+    
+    def _get_sectors(self):
+        
+        client = self._connect()
+        
+        db = client["utils"] 
+        
+        return db["sectors"].find()[0]
+
+    
+    def _get_currencies(self):
+        
+        client = self._connect()
+        
+        db = client["utils"] 
+        
+        return db["currencies"].find()[0]
+    
+    
+    def get_current_portfolio_list(self):
+        
+        client = self._connect()
+        
+        db = client["portfolio"]
+
+        self.portfolios = []
+        for portfolio in db.list_collections():
+            self.portfolios.append(portfolio['name'])
+        
+        return self.portfolios
+    
+    
+    def set_portfolio(self, portfolio):
+        
+        portfolio.generate()
+        self._current_Portfolio = portfolio
+        
+        portfolio_simulation = PortfolioSimulation(portfolio)
+        self._current_PortfolioSimulation = portfolio_simulation
+        
+        content_generator = ContentGenerator(portfolio, portfolio_simulation, self.sectors)
+        self._current_ContentGenerator = content_generator
+        
+        return
+    
+    
+    def get_portfolio(self, name):
+        
+        self.get_current_portfolio_list()
+        if name not in self.portfolios:
+            raise ValueError(f"'{name}' portfolio not in the db")
+                
+        portfolio = Portfolio(name)
+        
+        client = self._connect()
+        
+        db = client["portfolio"]
+        portfolio_colletion = db[portfolio.name]
+        
+        ticker_list = portfolio_colletion.find()
+        for t in ticker_list:
+            portfolio.add_Ticker(Ticker(t))
+        
+        self.set_portfolio(portfolio)
+        
+        return portfolio
+    
+    
+    def delete_portfolio(self, name):
+        
+        client = self._connect()
+        
+        db = client["portfolio"]
+        
+        db[name].drop()
+        
+        self.get_current_portfolio_list()
+        
+        return
+    
+    
+    def store_new_portfolio(self, portfolio):
+        
+        client = self._connect()
+        
+        db = client["portfolio"]
+        
+        if portfolio.name in db.list_collection_names():
+            raise ValueError("Portfolios must have unique names.")
+
+        collection = db[portfolio.name]
+        
+        for ticker in portfolio.tickers:
+            collection.insert_one(ticker.dict)
+            
+        self.get_current_portfolio_list()
+        
+        return

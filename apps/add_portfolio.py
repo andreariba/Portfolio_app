@@ -7,7 +7,18 @@ from dash import dash_table
 
 def New_Portfolio(pdb):
 
-  #pdb.
+  sectors = pdb.sectors
+  currencies = pdb.currencies
+
+  sector_options = []
+  for k,v in sectors.items():
+    if k!='_id':
+      sector_options.append( { 'label':f"{v} ({k})",'value':k }  )
+
+  currency_options = []
+  for k,v in currencies.items():
+    if k!='_id':
+      currency_options.append( { 'label':v,'value':v }  )
   
   body = dbc.Container(
     [
@@ -22,13 +33,23 @@ def New_Portfolio(pdb):
                 html.P("Shares"),
                 dbc.Input(id='ticker-shares'),
                 html.P("Currency"),
-                dbc.Input(id='ticker-currency'),
+                dcc.Dropdown(
+                  id='ticker-currency',
+                  options=currency_options,
+                  value='',
+                  placeholder="Select a currency"
+                ),
                 html.P("Sector"),
-                dbc.Input(id='ticker-sector'),
+                dcc.Dropdown(
+                  id='ticker-sector',
+                  options=sector_options,
+                  value='',
+                  placeholder="Select an asset class"
+                ),
                 dbc.Button(
-                    "add",
+                    "add / remove",
                     id='new_portfolio_add',
-                )
+                ),
             ]),
           dbc.Col(
             [

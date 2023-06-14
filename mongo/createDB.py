@@ -19,9 +19,16 @@ sectors = {
     "SECTOR_2": "Sectors",
     "SECTOR_3": "Commodity",
     "SECTOR_4": "Crypto",
-    "SECTOR_5": "Currency"
+    "SECTOR_5": "Currency",
 }
 collection.insert_one(sectors)
+
+collection = db["currencies"]
+currencies = {
+    'CUR_01': 'EUR',
+    'CUR_02': 'USD',
+}
+collection.insert_one(currencies)
 
 # Access a database
 db = client["portfolio"]
