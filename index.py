@@ -5,7 +5,7 @@ from dash.dependencies import Input, Output, State
 from dash import dash_table
 import dash_bootstrap_components as dbc
 
-from utils.Portfolio import PortfolioDB, Portfolio, Ticker
+from backend.Portfolio import PortfolioDB, Portfolio, Ticker
 import json
 
 from apps.homepage import Homepage
@@ -15,14 +15,14 @@ from apps.forecast import Forecast
 from apps.add_portfolio import New_Portfolio
 from navbar import Navbar
 
-
+print(dash.__version__)
 
 ##########################
 ## Create the app
 app = dash.Dash(__name__, external_stylesheets = [dbc.themes.LUX])
 app.config.suppress_callback_exceptions = True
 app.layout = html.Div([
-  dcc.Location(id='url',refresh=False),
+  dcc.Location(id='url', refresh=True),
   Navbar(),
   html.Div(id='page-content')
 ])
@@ -37,15 +37,11 @@ pdb.get_portfolio('Example')
 pm = pdb.current_portfolio
 ps = pdb.current_simulation
 
-initial_portfolio = Portfolio("empty")
-
 
 ##########################
 ## Callback /new endpoint: to store a new portfolio inthe DB from the temporary portfolio
 @app.callback(
-    [
-      Output(component_id='portfolio-change', component_property='value'),
-    ],
+  Output(component_id='portfolio-change', component_property='children'),
   Input(component_id='new-portfolio-button', component_property='n_clicks'),
   State('portfolio-name', 'value'),
   State(component_id='new-portfolio-storage', component_property='data'),
@@ -58,7 +54,7 @@ def create_new_portfolio(_, value, portfolio_storage):
   for ticker_dict in portfolio_storage:
     portfolio.add_Ticker(Ticker(ticker_dict))
   pdb.store_new_portfolio(portfolio)
-  return html.Div(dcc.Location(pathname="/home", id="0"))
+  return html.Div(dcc.Location(pathname="/home", id="url"))
 
 
 ##########################
@@ -81,13 +77,9 @@ def create_new_portfolio(_, value, portfolio_storage):
 def add_ticker_to_new_portfolio(_, name, shares, currency, sector, portfolio_storage):
   
   ticker = Ticker({'ticker':name,'shares':float(shares),'currency':currency,'sector':sector})
-  print("[Initial portfolio]", initial_portfolio.dataframe_representation())
-  if portfolio_storage is None:
-    if len(initial_portfolio.tickers)==0:
-      portfolio_storage = [ticker.dict]
-    else:
-      initial_portfolio_storage = [t.dict for t in initial_portfolio.tickers]
-      portfolio_storage = initial_portfolio_storage + [ticker.dict]
+  print("[Temporary Portfolio]:", portfolio_storage)
+  if portfolio_storage=='null':
+      portfolio_storage =  [ticker.dict]
   else:
     portfolio_storage = json.loads(portfolio_storage)
     portfolio_storage.append(ticker.dict)
@@ -161,38 +153,38 @@ def selectPortfolio(_, value):
   prevent_initial_call=True,
 )
 def editPortfolio(_, value):
+  print("edit", value)
   if value=='Add new portfolio':
-    initial_portfolio = Portfolio("empty")
-    return html.Div("Invalid")
-  elif value!='':
-    initial_portfolio = pdb.get_portfolio(value)
-    print("Edit portfolio:", initial_portfolio.name)
     return html.Div(dcc.Location(pathname="/new", id="0"))
-  return html.Div("Invalid")
+  elif value!='':
+    print("here")
+    return html.Div(dcc.Location(pathname="/edit", id="0", search=value))
+  return html.Div(dcc.Location(pathname="/new", id="0"))
 
 
 ##########################
 ## Callback /home endpoint: to delete a portfolio from the DB
 @app.callback(
-  Output(component_id='delete_portfolio', component_property='value'),
+  Output(component_id='delete_portfolio', component_property='children'),
   Input(component_id='portfolio_delete_button', component_property='n_clicks'),
   State(component_id='portfolio_select_dropdown', component_property='value'),
   prevent_initial_call=True,
 )
 def deletePortfolio(_, value):
   if value=='Add new portfolio':
-    return 'None'
+    return html.Div(dcc.Location(pathname="/home", id="0"))
   elif value!='':
     pdb.delete_portfolio(value)
-    return html.Div(dcc.Location(pathname="/home", id="0"))
-  return 'None'
+  return html.Div(dcc.Location(pathname="/home", id="0"))
 
 
 ##########################
 ## Callback to redirect path to the correct pages
-@app.callback( Output('page-content','children'), [Input('url','pathname')] )
-def display_page(pathname):
-  print(pathname)
+@app.callback( Output('page-content','children'), [Input('url','pathname'),Input('url','search')] )
+def display_page(pathname,search):
+  print(pathname,search, search=='')
+  if len(search)>0:
+    value = search[1:]
   if pathname=='/overview':
     return Overview(pdb)
   elif pathname=='/forecast':
@@ -201,8 +193,10 @@ def display_page(pathname):
     return Allocation(pdb)
   elif pathname=='/home':
     return Homepage(pdb, homepage_img_url)
-  elif pathname=='/new':
+  elif pathname=='/new': 
     return New_Portfolio(pdb)
+  elif pathname=='/edit': 
+    return New_Portfolio(pdb,value)
   else:
     return Homepage(pdb, homepage_img_url)
 

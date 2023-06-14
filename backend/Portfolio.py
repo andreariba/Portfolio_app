@@ -27,7 +27,6 @@ class Ticker:
 
 
 
-
 class YFBridge:
     @staticmethod
     def download_data(tickers):
@@ -42,7 +41,7 @@ class YFBridge:
 
         symbols = [ticker.ticker for ticker in tickers]
         
-        currencies = []
+        currencies = ["EUR=X"]
         for ticker in tickers:
             if ticker.currency!="USD":
                 new_currency = ticker.currency+"=X"
@@ -50,9 +49,13 @@ class YFBridge:
                     currencies.append(ticker.currency+"=X")
         
         raw_data_price = yf.download(symbols+currencies, start=a_year_ago, end=today)
-
-        raw_close_price = raw_data_price.iloc[:, raw_data_price.columns.get_level_values(0) == 'Close']
-        raw_close_price.columns = raw_close_price.columns.droplevel()
+        
+        if len(symbols+currencies)==1:
+            raw_close_price = raw_data_price.iloc[:, raw_data_price.columns == 'Close']
+            raw_close_price.columns = [ticker.ticker]
+        else:
+            raw_close_price = raw_data_price.iloc[:, raw_data_price.columns.get_level_values(0) == 'Close']
+            raw_close_price.columns = raw_close_price.columns.droplevel()
         raw_pct_change = raw_close_price[symbols].pct_change()*100
 
         close_price_df = raw_close_price.copy()

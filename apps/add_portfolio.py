@@ -4,8 +4,10 @@ from dash import dcc
 from dash import html
 from dash import dash_table
 
+import json
 
-def New_Portfolio(pdb):
+
+def New_Portfolio(pdb, search=None):
 
   sectors = pdb.sectors
   currencies = pdb.currencies
@@ -19,6 +21,16 @@ def New_Portfolio(pdb):
   for k,v in currencies.items():
     if k!='_id':
       currency_options.append( { 'label':v,'value':v }  )
+
+  initial_portfolio = None
+  initial_name = 'portfolio-01'
+  if search is not None:
+    initial_name = pdb.current_portfolio.name
+    initial_portfolio = []
+    for ticker in pdb.current_portfolio.tickers:
+      initial_portfolio.append(ticker.dict)
+
+  print(initial_name, initial_portfolio)
   
   body = dbc.Container(
     [
@@ -56,17 +68,20 @@ def New_Portfolio(pdb):
               html.P("Name"),
               dbc.Input(
                 id='portfolio-name',
-                value='nome-01',
+                value=initial_name,
                 disabled=True,
               ),
               dbc.Button(
-                "create new portfolio",
+                "save portfolio",
                 id='new-portfolio-button',
                 disabled=True,
               ),
               
               html.Center([html.Div(id='table_new_portfolio')]),
-              dcc.Store(id='new-portfolio-storage'),
+              dcc.Store(
+                id='new-portfolio-storage',
+                data=json.dumps(initial_portfolio),
+              ),
               html.Div(id="portfolio-change"),
             ]
           ),
