@@ -535,6 +535,7 @@ class ContentGenerator:
 
 
 
+
 class PortfolioDB(metaclass=Singleton):
 
     def __init__(self) -> None:
@@ -657,7 +658,7 @@ class PortfolioDB(metaclass=Singleton):
         db = client["portfolio"]
         
         if portfolio.name in db.list_collection_names():
-            raise ValueError("Portfolios must have unique names.")
+            self.delete_portfolio(portfolio.name)
 
         collection = db[portfolio.name]
         

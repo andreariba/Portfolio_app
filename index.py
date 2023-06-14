@@ -15,7 +15,7 @@ from apps.forecast import Forecast
 from apps.add_portfolio import New_Portfolio
 from navbar import Navbar
 
-print(dash.__version__)
+print("[Dash version]:", dash.__version__)
 
 ##########################
 ## Create the app
@@ -31,7 +31,7 @@ homepage_img_url = app.get_asset_url('homepage_image.svg')
 
 
 ##########################
-## Create the manager of MongoDB and an empty portfolio
+## Create the manager of the db (MongoDB)
 pdb = PortfolioDB()
 pdb.get_portfolio('Example')
 pm = pdb.current_portfolio
@@ -157,8 +157,9 @@ def editPortfolio(_, value):
   if value=='Add new portfolio':
     return html.Div(dcc.Location(pathname="/new", id="0"))
   elif value!='':
-    print("here")
-    return html.Div(dcc.Location(pathname="/edit", id="0", search=value))
+    pdb.get_portfolio(value)
+    print("Edit portfolio:", pdb.current_portfolio.name)
+    return html.Div(dcc.Location(pathname="/edit", id="0"))
   return html.Div(dcc.Location(pathname="/new", id="0"))
 
 
@@ -180,11 +181,8 @@ def deletePortfolio(_, value):
 
 ##########################
 ## Callback to redirect path to the correct pages
-@app.callback( Output('page-content','children'), [Input('url','pathname'),Input('url','search')] )
-def display_page(pathname,search):
-  print(pathname,search, search=='')
-  if len(search)>0:
-    value = search[1:]
+@app.callback( Output('page-content','children'), [Input('url','pathname')] )
+def display_page(pathname):
   if pathname=='/overview':
     return Overview(pdb)
   elif pathname=='/forecast':
@@ -194,9 +192,9 @@ def display_page(pathname,search):
   elif pathname=='/home':
     return Homepage(pdb, homepage_img_url)
   elif pathname=='/new': 
-    return New_Portfolio(pdb)
-  elif pathname=='/edit': 
-    return New_Portfolio(pdb,value)
+    return New_Portfolio(pdb,initial=False)
+  elif pathname=='/edit':
+    return New_Portfolio(pdb,initial=True)
   else:
     return Homepage(pdb, homepage_img_url)
 
