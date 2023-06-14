@@ -77,7 +77,7 @@ def create_new_portfolio(_, value, portfolio_storage):
 def add_ticker_to_new_portfolio(_, name, shares, currency, sector, portfolio_storage):
   
   ticker = Ticker({'ticker':name,'shares':float(shares),'currency':currency,'sector':sector})
-  print("[Temporary Portfolio]:", portfolio_storage)
+  
   if portfolio_storage=='null':
       portfolio_storage =  [ticker.dict]
   else:
