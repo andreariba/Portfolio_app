@@ -1,8 +1,6 @@
-import dash
 import dash_bootstrap_components as dbc
 from dash import dcc
 from dash import html
-from dash import dash_table
 
 def Homepage(pdb, imageurl):
 
@@ -19,6 +17,7 @@ def Homepage(pdb, imageurl):
                 ],
                 value=pdb.current_portfolio.name,
                 placeholder="Select a portfolio",
+                style={'margin-top':'80px'},
               ),
               dbc.Button(
                 "Select",
