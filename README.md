@@ -26,7 +26,7 @@ For large portfolio it may take some times (~1 minute) to load the portfolio bec
 The dashboard includes 4 pages (/apps).
  1. Homepage. This page allows to manage the different portfolios, i.e. create, delete and edit new or existing portfolios.
 
- 2. Overiew. Perfomance of the portfolio in the last year, calculates percentage change and volatility (standard deviation of the relative changes). It shows also the top gainers and losers from the last year, useful to have an overview of the current market behaviour.
+ 2. Overview. Perfomance of the portfolio in the last year, calculates percentage change and volatility (standard deviation of the relative changes). It shows also the top gainers and losers from the last year, useful to have an overview of the current market behaviour.
 ![home_screenshot](imgs/home.png)
 
  3. Allocation. A comparison of the percentages of asset types in the portfolio in the last year. Useful in case you are adopting a rebalancing strategy.

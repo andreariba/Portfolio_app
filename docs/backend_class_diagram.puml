@@ -1,0 +1,17 @@
+@startuml
+title "Backend Class Diagram"
+abstract Singleton
+class Ticker
+class Portfolio
+class PortfolioSimulation
+class ContentGenerator
+class PortfolioDB
+Portfolio "1" o-- "many" Ticker : has
+PortfolioDB "1" o-- Portfolio
+PortfolioDB "1" o-- PortfolioSimulation
+PortfolioDB "1" o-- ContentGenerator
+PortfolioDB <|-- Singleton : is a
+Portfolio <-- PortfolioSimulation : references
+Portfolio <-- ContentGenerator : references
+PortfolioSimulation <-- ContentGenerator : references
+@enduml

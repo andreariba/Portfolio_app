@@ -1,0 +1,13 @@
+digraph "classes_Portfolio" {
+rankdir=BT
+charset="utf-8"
+"Portfolio.ContentGenerator" [color="black", fontcolor="black", label="{ContentGenerator|allocation_piesector\lallocation_piesector_initial\lallocation_sector_growth\lforecast_perfomance_df\lforecast_portfolio\lhomepage_capital_growth\lhomepage_loser_gainer_df\lhomepage_perfomance_df\lportfolio\lportfolio_simulation\lsectors\lstock_sectors\l|forecast_asset_figure(ticker)\l}", shape="record", style="solid"];
+"Portfolio.Portfolio" [color="black", fontcolor="black", label="{Portfolio|asset_values\lname\lpct_values\ltickers : list\l|add_Ticker(ticker)\ldataframe_representation()\lgenerate()\l}", shape="record", style="solid"];
+"Portfolio.PortfolioDB" [color="black", fontcolor="black", label="{PortfolioDB|currencies : NoneType\lcurrent_content\lcurrent_portfolio\lcurrent_simulation\lportfolios : list\lsectors : NoneType\l|delete_portfolio(name)\lget_current_portfolio_list()\lget_portfolio(name)\lset_portfolio(portfolio)\lstore_new_portfolio(portfolio)\l}", shape="record", style="solid"];
+"Portfolio.PortfolioSimulation" [color="black", fontcolor="black", label="{PortfolioSimulation|data_pct\ldata_price\ln_simulations : int\lportfolio_manager\lsimulations\ltrading_days : int\l|}", shape="record", style="solid"];
+"Portfolio.Singleton" [color="black", fontcolor="black", label="{Singleton|\l|}", shape="record", style="solid"];
+"Portfolio.Ticker" [color="black", fontcolor="black", label="{Ticker|currency\ldict\lsector\lshares\lticker\l|}", shape="record", style="solid"];
+"Portfolio.YFBridge" [color="black", fontcolor="black", label="{YFBridge|\l|download_data(tickers)\l}", shape="record", style="solid"];
+"Portfolio.ContentGenerator" -> "Portfolio.PortfolioDB" [arrowhead="diamond", arrowtail="none", fontcolor="green", label="_current_ContentGenerator", style="solid"];
+"Portfolio.PortfolioSimulation" -> "Portfolio.PortfolioDB" [arrowhead="diamond", arrowtail="none", fontcolor="green", label="_current_PortfolioSimulation", style="solid"];
+}

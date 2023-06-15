@@ -1,0 +1,41 @@
+@startuml
+title "App Interaction"
+
+left to right direction
+
+actor "User" as user
+
+rectangle FrontEnd {
+    usecase "SELECT portfolio" as select
+    usecase "EDIT portfolio" as edit
+    usecase "DELETE portfolio" as delete
+    usecase "visualization" as visualize
+}
+
+actor "PortfolioDB" as App
+
+rectangle Backend {
+  usecase "set_portfolio()" as back_set
+  usecase "store_new_portfolio()" as back_store
+  usecase "delete_portfolio()" as back_delete
+}
+
+database "MongoDB" as db
+
+user --> select
+user --> edit
+user --> delete
+user --> visualize
+
+select --> App
+edit --> App
+delete --> App
+
+App --> Backend
+
+Backend --> db
+db --> back_set
+
+back_set --> visualize
+
+@enduml
