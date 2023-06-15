@@ -9,16 +9,10 @@ rectangle FrontEnd {
     usecase "SELECT portfolio" as select
     usecase "EDIT portfolio" as edit
     usecase "DELETE portfolio" as delete
-    usecase "visualization" as visualize
+    usecase "visualization:\n/overview\n/allocation\n/forecast" as visualize
 }
 
 actor "PortfolioDB" as App
-
-rectangle Backend {
-  usecase "set_portfolio()" as back_set
-  usecase "store_new_portfolio()" as back_store
-  usecase "delete_portfolio()" as back_delete
-}
 
 database "MongoDB" as db
 
@@ -31,11 +25,10 @@ select --> App
 edit --> App
 delete --> App
 
-App --> Backend
+App <--> db : "get_portfolio()"
+App --> db : "store_new_portfolio()"
+App --> db : "delete_portfolio()"
 
-Backend --> db
-db --> back_set
-
-back_set --> visualize
+App --> visualize
 
 @enduml
