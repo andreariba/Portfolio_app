@@ -15,7 +15,7 @@ from apps.forecast import Forecast
 from apps.add_portfolio import New_Portfolio
 from navbar import Navbar
 
-print("[Dash version]:", dash.__version__)
+print("\n**** Portfolio App ****\n\n[Dash version]:", dash.__version__)
 
 ##########################
 ## Create the app
@@ -42,9 +42,9 @@ ps = pdb.current_simulation
 ## Callback /new endpoint: to store a new portfolio inthe DB from the temporary portfolio
 @app.callback(
   Output(component_id='portfolio-change', component_property='children'),
-  Input(component_id='new-portfolio-button', component_property='n_clicks'),
-  State('portfolio-name', 'value'),
-  State(component_id='new-portfolio-storage', component_property='data'),
+  Input(component_id='button-save_portfolio', component_property='n_clicks'),
+  State(component_id='input-portfolio_name', component_property='value'),
+  State(component_id='storage-temporary-portfolio', component_property='data'),
   prevent_initial_call=True
 )
 def create_new_portfolio(_, value, portfolio_storage):
@@ -61,23 +61,24 @@ def create_new_portfolio(_, value, portfolio_storage):
 ## Callback /new endpoint: to add a new ticker to the temporary new portfolio
 @app.callback( 
   [
-    Output(component_id='new-portfolio-storage', component_property='data'),
-    Output(component_id='portfolio-name', component_property='disabled'),
-    Output(component_id='new-portfolio-button', component_property='disabled'),
-    Output(component_id='table_new_portfolio', component_property='children'),
+    Output(component_id='storage-temporary-portfolio', component_property='data'),
+    Output(component_id='input-portfolio_name', component_property='disabled'),
+    Output(component_id='button-save_portfolio', component_property='disabled'),
+    Output(component_id='table-new_portfolio', component_property='children'),
   ],
-  Input(component_id='new_portfolio_add', component_property='n_clicks'),
-  State(component_id='ticker-name', component_property='value'),
-  State(component_id='ticker-shares', component_property='value'),
-  State(component_id='ticker-currency', component_property='value'),
-  State(component_id='ticker-sector', component_property='value'),
-  State(component_id='new-portfolio-storage', component_property='data'),
+  Input(component_id='button-add_remove', component_property='n_clicks'),
+  State(component_id='input-ticker-name', component_property='value'),
+  State(component_id='input-ticker-shares', component_property='value'),
+  State(component_id='dropdown-ticker-currency', component_property='value'),
+  State(component_id='dropdown-ticker-sector', component_property='value'),
+  State(component_id='storage-temporary-portfolio', component_property='data'),
   prevent_initial_call=True
 )
 def add_ticker_to_new_portfolio(_, name, shares, currency, sector, portfolio_storage):
   
   ticker = Ticker({'ticker':name,'shares':float(shares),'currency':currency,'sector':sector})
   
+  # detect if the portfolio_storage is empty or already initialized
   if portfolio_storage=='null':
       portfolio_storage =  [ticker.dict]
   else:
@@ -85,6 +86,7 @@ def add_ticker_to_new_portfolio(_, name, shares, currency, sector, portfolio_sto
     portfolio_storage.append(ticker.dict)
   print("[Temporary Portfolio]:", portfolio_storage)
 
+  # merge if the tickers are already in the portfolio_storage
   to_remove = []
   for i in range(len(portfolio_storage)):
     ticker_1 = portfolio_storage[i]
@@ -99,10 +101,12 @@ def add_ticker_to_new_portfolio(_, name, shares, currency, sector, portfolio_sto
     if ticker_1['shares']<=0 and ticker_1 not in to_remove:
       to_remove.append(ticker_1)
 
+  # remove the not needed anymore ticker entries
   print("removing:", to_remove)
   for t in to_remove:
     portfolio_storage.remove(t)
 
+  # generate a Portfolio object to obtain the dataframe representation
   portfolio = Portfolio("tmp")
   for ticker_dict in portfolio_storage:
     portfolio.add_Ticker(Ticker(ticker_dict))
@@ -113,12 +117,12 @@ def add_ticker_to_new_portfolio(_, name, shares, currency, sector, portfolio_sto
 
 ##########################
 ## Callback /forecast endpoint: to update the ticker simulation plot
-@app.callback( 
+@app.callback(
   [
-    Output(component_id='asset_forecast', component_property='figure'), 
-    Output(component_id='table_asset_perfomance', component_property='children'),
+    Output(component_id='graph-asset_forecast', component_property='figure'), 
+    Output(component_id='table-asset_perfomance', component_property='children'),
   ],
-  Input('asset_dropdown', 'value') 
+  Input('dropdown-forecast_asset', 'value') 
 )
 def update_asset_forecast(value):
   cg = pdb.current_content
@@ -129,9 +133,9 @@ def update_asset_forecast(value):
 ##########################
 ## Callback /home endpoint: to select a portfolio or go to /new endpoipnt
 @app.callback(
-  Output(component_id='select_portfolio', component_property='children'),
-  Input(component_id='portfolio_select_button', component_property='n_clicks'),
-  State(component_id='portfolio_select_dropdown', component_property='value'),
+  Output(component_id='div-select_portfolio', component_property='children'),
+  Input(component_id='button-select_portfolio', component_property='n_clicks'),
+  State(component_id='dropdown-select_portfolio', component_property='value'),
   prevent_initial_call=True,
 )
 def selectPortfolio(_, value):
@@ -147,9 +151,9 @@ def selectPortfolio(_, value):
 ##########################
 ## Callback /home endpoint: to edit a portfolio and go to /new endpoipnt
 @app.callback(
-  Output(component_id='edit_portfolio', component_property='children'),
-  Input(component_id='portfolio_edit_button', component_property='n_clicks'),
-  State(component_id='portfolio_select_dropdown', component_property='value'),
+  Output(component_id='div-edit_portfolio', component_property='children'),
+  Input(component_id='button-edit_portfolio', component_property='n_clicks'),
+  State(component_id='dropdown-select_portfolio', component_property='value'),
   prevent_initial_call=True,
 )
 def editPortfolio(_, value):
@@ -166,9 +170,9 @@ def editPortfolio(_, value):
 ##########################
 ## Callback /home endpoint: to delete a portfolio from the DB
 @app.callback(
-  Output(component_id='delete_portfolio', component_property='children'),
-  Input(component_id='portfolio_delete_button', component_property='n_clicks'),
-  State(component_id='portfolio_select_dropdown', component_property='value'),
+  Output(component_id='div-delete_portfolio', component_property='children'),
+  Input(component_id='button-delete_portfolio', component_property='n_clicks'),
+  State(component_id='dropdown-select_portfolio', component_property='value'),
   prevent_initial_call=True,
 )
 def deletePortfolio(_, value):

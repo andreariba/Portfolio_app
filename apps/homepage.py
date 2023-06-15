@@ -11,7 +11,7 @@ def Homepage(pdb, imageurl):
           dbc.Col(
             [
               dcc.Dropdown(
-                id='portfolio_select_dropdown',
+                id='dropdown-select_portfolio',
                 options=[
                   {'label': i, 'value':i} for i in pdb.portfolios+['Add new portfolio']
                 ],
@@ -21,19 +21,19 @@ def Homepage(pdb, imageurl):
               ),
               dbc.Button(
                 "Select",
-                id='portfolio_select_button',
+                id='button-select_portfolio',
               ),
               dbc.Button(
                 "Edit",
-                id='portfolio_edit_button',
+                id='button-edit_portfolio',
               ),
               dbc.Button(
                 "Delete",
-                id='portfolio_delete_button',
+                id='button-delete_portfolio',
               ),
-              html.Div(id='select_portfolio'),
-              html.Div(id='edit_portfolio'),
-              html.Div(id='delete_portfolio'),
+              html.Div(id='div-select_portfolio'),
+              html.Div(id='div-edit_portfolio'),
+              html.Div(id='div-delete_portfolio'),
             ], style={'display': 'inline-block', 'width': '100%', 'height': '100%', 'verticalAlign': 'middle', 'textAlign': 'center'},
           ),
         ]

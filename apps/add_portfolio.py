@@ -46,50 +46,50 @@ def New_Portfolio(pdb, initial=False):
             [
               html.P("Add ticker"),
               html.P("Ticker (Yahoo Finance)"),
-              dbc.Input(id='ticker-name'),
+              dbc.Input(id='input-ticker-name'),
               html.P("Shares"),
-              dbc.Input(id='ticker-shares'),
+              dbc.Input(id='input-ticker-shares'),
               html.P("Currency"),
               dcc.Dropdown(
-                id='ticker-currency',
+                id='dropdown-ticker-currency',
                 options=currency_options,
                 value='',
                 placeholder="Select a currency"
               ),
               html.P("Sector"),
               dcc.Dropdown(
-                id='ticker-sector',
+                id='dropdown-ticker-sector',
                 options=sector_options,
                 value='',
                 placeholder="Select an asset class"
               ),
               dbc.Button(
                 "add / remove",
-                id='new_portfolio_add',
+                id='button-add_remove',
               ),
             ]),
           dbc.Col(
             [
               html.P("Name"),
               dbc.Input(
-                id='portfolio-name',
+                id='input-portfolio_name',
                 value=initial_name,
                 disabled=True,
               ),
               dbc.Button(
                 "save portfolio",
-                id='new-portfolio-button',
+                id='button-save_portfolio',
                 disabled=True,
               ),
               
               html.Center(
                 [
-                  html.Div(id='table_new_portfolio',
+                  html.Div(id='table-new_portfolio',
                            children=dash_table.DataTable(data=initial_df .to_dict('records'), columns=[{"name": i, "id": i} for i in initial_df .columns], fill_width=True)
                           )
                 ]),
               dcc.Store(
-                id='new-portfolio-storage',
+                id='storage-temporary-portfolio',
                 data=json.dumps(initial_portfolio),
               ),
               html.Div(id="portfolio-change"),

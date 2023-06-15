@@ -20,9 +20,9 @@ def Forecast(pdb):
         [
           dbc.Col(
             [        
-              dcc.Graph( id='portfolio_forecast',figure=fig_portfolio_prediction ),
+              dcc.Graph( id='graph-portfolio_forecast',figure=fig_portfolio_prediction ),
               html.P( "Montecarlo simulations predict the following scenario for the portfolio:"),
-              html.Center([dash_table.DataTable(id='table_portfolio_perfomance', data=portfolio_perfomance_df.to_dict('records'),
+              html.Center([dash_table.DataTable(id='table-portfolio_perfomance', data=portfolio_perfomance_df.to_dict('records'),
                                   columns=[{"name": i, "id": i} for i in portfolio_perfomance_df.columns],
                                   fill_width=False
                           )])
@@ -31,15 +31,15 @@ def Forecast(pdb):
           dbc.Col(
             [
               dcc.Dropdown(
-                id='asset_dropdown',
+                id='dropdown-forecast_asset',
                 options=[
                   {'label':i, 'value':i} for i in tickers
                 ],
                 value=tickers[0],
                 placeholder="Select an asset"
               ),
-              dcc.Graph( id='asset_forecast' ),
-              html.Center([html.Div(id='table_asset_perfomance')]),
+              dcc.Graph( id='graph-asset_forecast' ),
+              html.Center([html.Div(id='table-asset_perfomance')]),
             ], width=6,
           ),
         ], justify="center", style={'marginLeft': 'auto', 'marginRight': 'auto'}
