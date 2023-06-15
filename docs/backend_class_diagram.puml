@@ -1,11 +1,64 @@
 @startuml
 title "Backend Class Diagram"
+
 abstract Singleton
+
 class Ticker
+Ticker : ticker : str
+Ticker : shares : float
+Ticker : currency : str
+Ticker : sector : str
+Ticker : dict : dict
+
+
 class Portfolio
+Portfolio : name : str
+Portfolio : tickers : list
+Portfolio : asset_values : pd.DataFrame
+Portfolio : pct_values : pd.DataFrame
+Portfolio : add_Ticker(ticker)
+Portfolio : generate()
+Portfolio : dataframe_representation()
+
+
 class PortfolioSimulation
+PortfolioSimulation : data_pct
+PortfolioSimulation : data_price 
+PortfolioSimulation : n_simulations : int
+PortfolioSimulation : trading_days : int
+PortfolioSimulation : portfolio : Portfolio
+PortfolioSimulation : simulations : np.array
+
+
 class ContentGenerator
+ContentGenerator : sectors : dict
+ContentGenerator : stock_sectors : dict
+ContentGenerator : portfolio : Portfolio
+ContentGenerator : portfolio_simulation : PortfolioSimulation
+ContentGenerator : homepage_capital_growth : plotly graph
+ContentGenerator : homepage_loser_gainer_df : pd.DataFrame
+ContentGenerator : homepage_perfomance_df : pd.DataFrame
+ContentGenerator : allocation_piesector : plotly graph
+ContentGenerator : allocation_piesector_initial : plotly graph
+ContentGenerator : allocation_sector_growth : plotly graph
+ContentGenerator : forecast_perfomance_df : pd.DataFrame
+ContentGenerator : forecast_portfolio : plotly graph
+
+
 class PortfolioDB
+PortfolioDB : sectors : dict
+PortfolioDB : currencies : dict
+PortfolioDB : current_content : ContentGenerator
+PortfolioDB : current_portfolio : Portfolio
+PortfolioDB : current_simulation : PortfolioSimulation
+PortfolioDB : portfolios : list
+PortfolioDB : delete_portfolio(name)
+PortfolioDB : get_current_portfolio_list()
+PortfolioDB : get_portfolio(name)
+PortfolioDB : set_portfolio(portfolio)
+PortfolioDB : store_new_portfolio(portfolio)
+
+
 Portfolio "1" o-- "many" Ticker : has
 PortfolioDB "1" o-- Portfolio
 PortfolioDB "1" o-- PortfolioSimulation
@@ -14,4 +67,5 @@ PortfolioDB <|-- Singleton : is a
 Portfolio <-- PortfolioSimulation : references
 Portfolio <-- ContentGenerator : references
 PortfolioSimulation <-- ContentGenerator : references
+
 @enduml
