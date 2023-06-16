@@ -1,6 +1,8 @@
 @startuml
 title "Backend Class Diagram"
 
+left to right direction
+
 abstract Singleton
 
 class Ticker
