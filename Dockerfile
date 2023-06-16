@@ -15,6 +15,6 @@ WORKDIR /home/Portfolio_app
 #RUN pip install --upgrade pip
 RUN pip install dash dash-bootstrap-components pymongo copulas
 
-CMD ["sh", "run.sh"]
+CMD ["python", "index.py"]
 
 EXPOSE 8050
