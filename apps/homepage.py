@@ -2,6 +2,10 @@ import dash_bootstrap_components as dbc
 from dash import dcc
 from dash import html
 
+
+def get_dropdown_select_portfolio_options(pdb):
+  return [{'label': i, 'value':i} for i in pdb.portfolios+['Add new portfolio']]
+
 def Homepage(pdb, imageurl):
 
   body = dbc.Container(
@@ -12,9 +16,7 @@ def Homepage(pdb, imageurl):
             [
               dcc.Dropdown(
                 id='dropdown-select_portfolio',
-                options=[
-                  {'label': i, 'value':i} for i in pdb.portfolios+['Add new portfolio']
-                ],
+                options=get_dropdown_select_portfolio_options(pdb),
                 value=pdb.current_portfolio.name,
                 placeholder="Select a portfolio",
                 style={'margin-top':'80px'},

@@ -8,7 +8,7 @@ import dash_bootstrap_components as dbc
 from backend.Portfolio import PortfolioDB, Portfolio, Ticker
 import json
 
-from apps.homepage import Homepage
+from apps.homepage import Homepage, get_dropdown_select_portfolio_options
 from apps.overview import Overview
 from apps.allocation import Allocation
 from apps.forecast import Forecast
@@ -28,6 +28,9 @@ app.layout = html.Div([
 ])
 app.title = 'PortfolioApp'
 homepage_img_url = app.get_asset_url('homepage_image.svg')
+
+# TODO
+dropdown_add_new_portfolio_label = 'Add new portfolio'
 
 
 ##########################
@@ -170,7 +173,11 @@ def editPortfolio(_, value):
 ##########################
 ## Callback /home endpoint: to delete a portfolio from the DB
 @app.callback(
-  Output(component_id='div-delete_portfolio', component_property='children'),
+  [
+    Output(component_id='div-delete_portfolio', component_property='children'),
+    Output(component_id='dropdown-select_portfolio', component_property='value'),
+    Output(component_id='dropdown-select_portfolio', component_property='options'),
+  ],
   Input(component_id='button-delete_portfolio', component_property='n_clicks'),
   State(component_id='dropdown-select_portfolio', component_property='value'),
   prevent_initial_call=True,
@@ -180,7 +187,9 @@ def deletePortfolio(_, value):
     return html.Div(dcc.Location(pathname="/home", id="0"))
   elif value!='':
     pdb.delete_portfolio(value)
-  return html.Div(dcc.Location(pathname="/home", id="0"))
+    print("Deleted:", value)
+    options = get_dropdown_select_portfolio_options(pdb)
+  return html.Div(dcc.Location(pathname="/home", id="0")), options[0]['value'], options
 
 
 ##########################
