@@ -313,6 +313,8 @@ class ContentGenerator:
         melted_asset_values['sector'] = melted_asset_values['variable'].map(self.stock_sectors).map(self.sectors)
         melted_asset_values = melted_asset_values.sort_values(by='sector')
 
+        print(melted_asset_values.groupby('Date').sum())
+
         fig_capital_growth = px.line(melted_asset_values.groupby('Date').sum(),labels=dict(Date="Last year", _value="Capital (EUR)"))
         fig_capital_growth.update_layout(title="Growth in the last year", title_x=0.5,showlegend=False)
         
