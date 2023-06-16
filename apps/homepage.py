@@ -3,8 +3,10 @@ from dash import dcc
 from dash import html
 
 
+DROPDOWN_ADD_NEW_PORTFOLIO_LABEL = 'Add new portfolio'
+
 def get_dropdown_select_portfolio_options(pdb):
-  return [{'label': i, 'value':i} for i in pdb.portfolios+['Add new portfolio']]
+  return [{'label': i, 'value':i} for i in pdb.portfolios+[DROPDOWN_ADD_NEW_PORTFOLIO_LABEL]]
 
 def Homepage(pdb, imageurl):
 

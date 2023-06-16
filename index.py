@@ -8,7 +8,7 @@ import dash_bootstrap_components as dbc
 from backend.Portfolio import PortfolioDB, Portfolio, Ticker
 import json
 
-from apps.homepage import Homepage, get_dropdown_select_portfolio_options
+from apps.homepage import Homepage, get_dropdown_select_portfolio_options, DROPDOWN_ADD_NEW_PORTFOLIO_LABEL
 from apps.overview import Overview
 from apps.allocation import Allocation
 from apps.forecast import Forecast
@@ -30,7 +30,7 @@ app.title = 'PortfolioApp'
 homepage_img_url = app.get_asset_url('homepage_image.svg')
 
 # TODO
-dropdown_add_new_portfolio_label = 'Add new portfolio'
+#dropdown_add_new_portfolio_label = 'Add new portfolio'
 
 
 ##########################
@@ -51,6 +51,8 @@ ps = pdb.current_simulation
   prevent_initial_call=True
 )
 def create_new_portfolio(_, value, portfolio_storage):
+  if value=='' or value==DROPDOWN_ADD_NEW_PORTFOLIO_LABEL:
+    return html.Div("Invalid name")
   portfolio_storage = json.loads(portfolio_storage)
   print(portfolio_storage)
   portfolio = Portfolio(value)
@@ -142,7 +144,7 @@ def update_asset_forecast(value):
   prevent_initial_call=True,
 )
 def selectPortfolio(_, value):
-  if value=='Add new portfolio':
+  if value==DROPDOWN_ADD_NEW_PORTFOLIO_LABEL:
     return html.Div(dcc.Location(pathname="/new", id="0"))
   elif value!='':
     pdb.get_portfolio(value)
