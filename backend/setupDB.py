@@ -3,7 +3,7 @@ from pymongo import MongoClient
 
 def initialize_MongoDB():
     # Connect to MongoDB
-    client = MongoClient("mongodb://localhost:27017/",
+    client = MongoClient("mongodb:27017/",
                         username='admin',
                         password='password'
                         )
@@ -12,7 +12,7 @@ def initialize_MongoDB():
     # Access a database
     db = client["utils"]
 
-    if "sectors" not in db:
+    if "sectors" not in db.list_collections():
         # access a collection with the sector mappings
         collection = db["sectors"]
         # insert one document into the collection
@@ -26,7 +26,7 @@ def initialize_MongoDB():
         }
         collection.insert_one(sectors)
 
-    if "currencies" not in db:
+    if "currencies" not in db.list_collections():
         collection = db["currencies"]
         currencies = {
             'CUR_01': 'EUR',
@@ -37,7 +37,7 @@ def initialize_MongoDB():
     # Access a database
     db = client["portfolio"]
 
-    if "Example" not in db:
+    if "Example" not in db.list_collections():
         # Access a collection
         collection = db["Example"]
 
