@@ -27,7 +27,7 @@ services:
   portfolio-app:
     image: portfolio-app
     depends_on:
-     - mongo
+     - mongodb
     restart: unless-stopped
     ports:
       - 8050:8050
