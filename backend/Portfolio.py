@@ -567,7 +567,7 @@ class PortfolioDB(metaclass=Singleton):
     def _connect(self):
         from pymongo import MongoClient
         
-        client = MongoClient("mongodb://localhost:27017/",
+        client = MongoClient("mongodb",
                              username='admin',
                              password='password'
                             )
