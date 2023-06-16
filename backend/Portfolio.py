@@ -65,10 +65,12 @@ class YFBridge:
         for ticker in tickers:
             if ticker.sector=='SECTOR_5':
                 continue
-            if ticker.currency=='USD':
-                close_price_df[ticker.ticker] = ticker.shares*close_price_df[ticker.ticker]*close_price_df['EUR=X']
-            elif ticker.currency=='EUR':
+            if ticker.currency=='EUR':
                 close_price_df[ticker.ticker] = ticker.shares*close_price_df[ticker.ticker]
+            elif ticker.currency=='USD':
+                close_price_df[ticker.ticker] = ticker.shares*close_price_df[ticker.ticker]*close_price_df['EUR=X']
+            else:
+                close_price_df[ticker.ticker] = ticker.shares*close_price_df[ticker.ticker]*close_price_df['EUR=X']/close_price_df[ticker.currency+'=X']
 
         #remove weekend days
         current_date = a_year_ago
