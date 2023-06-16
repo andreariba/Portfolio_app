@@ -567,10 +567,16 @@ class PortfolioDB(metaclass=Singleton):
     def _connect(self):
         from pymongo import MongoClient
         
-        client = MongoClient("mongodb://localhost:27017/",
+        client = MongoClient("mongodb:27017/",
                              username='admin',
                              password='password'
                             )
+        
+        # client = MongoClient("mongodb://localhost:27017/",
+        #                      username='admin',
+        #                      password='password'
+        #                     )
+
         return client
     
     def _get_sectors(self):
