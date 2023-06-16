@@ -117,7 +117,7 @@ class Portfolio:
         import pandas as pd
         df = pd.DataFrame(columns=list(Ticker().dict.keys()))
         for ticker in self.tickers:
-            df = df.append(ticker.dict, ignore_index=True)
+            df = pd.concat([df, pd.DataFrame([ticker.dict])], ignore_index=True)
         return df
     
     def add_Ticker(self, ticker):
@@ -127,7 +127,10 @@ class Portfolio:
             raise TypeError("ticker must be of Type Ticker")
             
     def generate(self):
-        self._asset_values, self._pct_values = YFBridge.download_data(self.tickers)
+        if len(self.tickers)>0:
+            self._asset_values, self._pct_values = YFBridge.download_data(self.tickers)
+    
+
     
     
 
@@ -231,6 +234,7 @@ class PortfolioSimulation:
     
 
 
+
 class ContentGenerator:
     
     def __init__(self, portfolio, portfolio_simulation, sectors):
@@ -313,9 +317,7 @@ class ContentGenerator:
         melted_asset_values['sector'] = melted_asset_values['variable'].map(self.stock_sectors).map(self.sectors)
         melted_asset_values = melted_asset_values.sort_values(by='sector')
 
-        print(melted_asset_values.groupby('Date').sum())
-
-        fig_capital_growth = px.line(melted_asset_values.groupby('Date').sum(), labels=dict(Date="Last year", value="Capital (EUR)"))
+        fig_capital_growth = px.line(melted_asset_values.groupby('Date').sum()['value'],labels=dict(Date="Last year", value="Capital (EUR)"))
         fig_capital_growth.update_layout(title="Growth in the last year", title_x=0.5,showlegend=False)
         
         self._homepage_capital_growth = fig_capital_growth
@@ -370,7 +372,9 @@ class ContentGenerator:
         melted_asset_values = melted_asset_values.sort_values(by='sector')
 
         most_recent_date = melted_asset_values['Date'].max()
-        most_recent_allocation_df = melted_asset_values[melted_asset_values['Date']==most_recent_date].groupby('sector').sum().reset_index().sort_values(by='sector')
+        
+        most_recent_allocation_df = melted_asset_values[melted_asset_values['Date']==most_recent_date].drop('Date', axis=1).groupby('sector').sum().reset_index().sort_values(by='sector')
+        
         fig_piesector = go.Figure(data=[go.Pie(values=most_recent_allocation_df.value, labels=most_recent_allocation_df.sector, sort=False) ])
         fig_piesector.update_layout(title="on "+str(most_recent_date),title_x=0.5, margin=dict(t=0, b=0, l=0, r=0))
 
@@ -382,7 +386,8 @@ class ContentGenerator:
         fig_sector_growth.update_yaxes(title_text='Value (EUR)')
 
         least_recent_date = melted_asset_values['Date'].min()
-        least_recent_allocation_df = melted_asset_values[melted_asset_values['Date']==least_recent_date].groupby('sector').sum().reset_index().sort_values(by='sector')
+        least_recent_allocation_df = melted_asset_values[melted_asset_values['Date']==least_recent_date].drop('Date', axis=1).groupby('sector').sum().reset_index().sort_values(by='sector')
+        
         fig_piesector_initial = go.Figure(data=[go.Pie(values=least_recent_allocation_df.value, labels=most_recent_allocation_df.sector,sort=False) ])
         fig_piesector_initial.update_layout(title="on "+str(least_recent_date),title_x=0.5, margin=dict(t=0, b=0, l=0, r=0))
 
