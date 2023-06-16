@@ -7,6 +7,11 @@ def initialize_MongoDB():
                         username='admin',
                         password='password'
                         )
+    
+    # client = MongoClient("mongodb://localhost:27017/",
+    #                      username='admin',
+    #                      password='password'
+    # 
 
 
     # Access a database

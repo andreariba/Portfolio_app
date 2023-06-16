@@ -33,9 +33,6 @@ app.layout = html.Div([
 app.title = 'PortfolioApp'
 homepage_img_url = app.get_asset_url('homepage_image.svg')
 
-# TODO
-#dropdown_add_new_portfolio_label = 'Add new portfolio'
-
 
 ##########################
 ## Create the manager of the db (MongoDB)
@@ -43,6 +40,8 @@ pdb = PortfolioDB()
 pdb.get_portfolio('Example')
 pm = pdb.current_portfolio
 ps = pdb.current_simulation
+
+print("Initialization done")
 
 
 ##########################
@@ -219,5 +218,6 @@ def display_page(pathname):
 
 # run the app
 if __name__=='__main__':
-  app.run_server(debug=True)
+  print("Starting the server ...")
+  app.run_server(debug=True, port=8050)
   
