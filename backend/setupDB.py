@@ -16,8 +16,8 @@ def initialize_MongoDB():
 
     # Access a database
     db = client["utils"]
-    print("utils", db.list_collections())
-    if not ("sectors" in db.list_collections()):
+    
+    if "sectors" not in db.list_collection_names():
         # access a collection with the sector mappings
         collection = db["sectors"]
         # insert one document into the collection
@@ -31,7 +31,7 @@ def initialize_MongoDB():
         }
         collection.insert_one(sectors)
     
-    if not ("currencies" in db.list_collections()):
+    if "currencies" not in db.list_collection_names():
         collection = db["currencies"]
         currencies = {
             'CUR_01': 'EUR',
@@ -41,8 +41,8 @@ def initialize_MongoDB():
 
     # Access a database
     db = client["portfolio"]
-    print("portfolio", db.list_collections())
-    if not ("Example" in db.list_collections()):
+
+    if "Example" not in db.list_collection_names():
         # Access a collection
         collection = db["Example"]
 
