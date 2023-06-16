@@ -16,10 +16,12 @@ Portfolio : name : str
 Portfolio : tickers : list
 Portfolio : asset_values : pd.DataFrame
 Portfolio : pct_values : pd.DataFrame
-Portfolio : add_Ticker(ticker)
+Portfolio : add_Ticker(Ticker)
 Portfolio : generate()
 Portfolio : dataframe_representation()
 
+class YFBridge
+YFBridge : download_data(tickers)
 
 class PortfolioSimulation
 PortfolioSimulation : data_pct
@@ -43,6 +45,7 @@ ContentGenerator : allocation_piesector_initial : plotly graph
 ContentGenerator : allocation_sector_growth : plotly graph
 ContentGenerator : forecast_perfomance_df : pd.DataFrame
 ContentGenerator : forecast_portfolio : plotly graph
+ContentGenerator : forecast_asset_figure(Ticker.ticker)
 
 
 class PortfolioDB
@@ -64,6 +67,7 @@ PortfolioDB "1" o-- Portfolio
 PortfolioDB "1" o-- PortfolioSimulation
 PortfolioDB "1" o-- ContentGenerator
 PortfolioDB <|-- Singleton : is a
+YFBridge <-- Portfolio : uses
 Portfolio <-- PortfolioSimulation : references
 Portfolio <-- ContentGenerator : references
 PortfolioSimulation <-- ContentGenerator : references
