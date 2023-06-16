@@ -315,7 +315,7 @@ class ContentGenerator:
 
         print(melted_asset_values.groupby('Date').sum())
 
-        fig_capital_growth = px.line(melted_asset_values.groupby('Date').sum(),labels=dict(Date="Last year", value="Capital (EUR)"))
+        fig_capital_growth = px.line(melted_asset_values.groupby('Date').sum(), labels=dict(Date="Last year", value="Capital (EUR)"))
         fig_capital_growth.update_layout(title="Growth in the last year", title_x=0.5,showlegend=False)
         
         self._homepage_capital_growth = fig_capital_growth

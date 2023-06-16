@@ -13,7 +13,7 @@ RUN git clone https://github.com/andreariba/Portfolio_app.git
 WORKDIR /home/Portfolio_app
 
 #RUN pip install --upgrade pip
-RUN pip install dash dash-bootstrap-components pymongo copulas yfinance
+RUN pip install pandas==1.4.4 dash==2.10.2 dash-bootstrap-components pymongo copulas yfinance
 
 CMD ["python", "index.py"]
 

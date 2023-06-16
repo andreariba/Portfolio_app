@@ -19,7 +19,14 @@ from navbar import Navbar
 
 initialize_MongoDB()
 
-print("\n**** Portfolio App ****\n\n[Dash version]:", dash.__version__)
+
+import pandas as pd
+import numpy as np
+
+print("\n**** Portfolio App ****\n")
+print("[Dash version]:", dash.__version__)
+print("[Pandas version]:", pd.__version__)
+print("[Numpy version]:", np.__version__)
 
 ##########################
 ## Create the app
