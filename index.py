@@ -18,7 +18,7 @@ from apps.add_portfolio import New_Portfolio
 from navbar import Navbar
 
 
-initialize_MongoDB()
+initialize_MongoDB(username=MONGO_DB_USERNAME, password=MONGO_DB_PWD)
 
 
 import pandas as pd
@@ -44,7 +44,7 @@ homepage_img_url = app.get_asset_url('homepage_image.svg')
 
 ##########################
 ## Create the manager of the db (MongoDB)
-pdb = PortfolioDB()
+pdb = PortfolioDB(mongo_user=MONGO_DB_USERNAME, mongo_pass=MONGO_DB_PWD)
 pdb.get_portfolio('Example')
 pm = pdb.current_portfolio
 ps = pdb.current_simulation
