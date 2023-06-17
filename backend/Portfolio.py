@@ -1,8 +1,6 @@
 
 import copy
 
-from configuration import MONGO_DB_USERNAME, MONGO_DB_PWD
-
 class Singleton(type):
     _instances = {}
     def __call__(cls, *args, **kwargs):
@@ -549,12 +547,16 @@ class ContentGenerator:
 
 class PortfolioDB(metaclass=Singleton):
 
-    def __init__(self) -> None:
+    def __init__(self, mongo_user='admin', mongo_pass='password') -> None:
         
+        self._mongo_user = mongo_user
+        self._mongo_pass = mongo_pass
+
         self.portfolios = []
         self.sectors = self._get_sectors()
         self.currencies = self._get_currencies()
         self.get_current_portfolio_list()
+
         self._current_Portfolio = None
         self._current_PortfolioSimulation = None
         self._current_ContentGenerator = None
@@ -577,8 +579,8 @@ class PortfolioDB(metaclass=Singleton):
         from pymongo import MongoClient
         
         client = MongoClient("mongodb",
-                             username=MONGO_DB_USERNAME, #'admin',
-                             password=MONGO_DB_PWD, #'password'
+                             username=self._mongo_user, #'admin',
+                             password=self._mongo_pass, #'password'
                             )
         
         # client = MongoClient("mongodb://localhost:27017/",

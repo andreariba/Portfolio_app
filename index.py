@@ -7,6 +7,7 @@ import dash_bootstrap_components as dbc
 
 from backend.Portfolio import PortfolioDB, Portfolio, Ticker
 from backend.setupDB import initialize_MongoDB
+from backend.configuration import MONGO_DB_USERNAME, MONGO_DB_PWD
 import json
 
 from apps.homepage import Homepage, get_dropdown_select_portfolio_options, DROPDOWN_ADD_NEW_PORTFOLIO_LABEL

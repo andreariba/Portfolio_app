@@ -1,12 +1,12 @@
 from pymongo import MongoClient
 
-from configuration import MONGO_DB_USERNAME, MONGO_DB_PWD
 
-def initialize_MongoDB():
+
+def initialize_MongoDB(username, password):
     # Connect to MongoDB
     client = MongoClient("mongodb",
-                        username=MONGO_DB_USERNAME, #'admin',
-                        password=MONGO_DB_PWD, #'password'
+                        username=username, #'admin',
+                        password=password, #'password'
                         )
     
     # client = MongoClient("mongodb://localhost:27017/",
@@ -59,5 +59,5 @@ def initialize_MongoDB():
     return
 
 if __name__=="__main__":
-    initialize_MongoDB()
+    initialize_MongoDB('admin','password')
 
