@@ -1,8 +1,6 @@
 import dash
-from dash import dcc
-from dash import html
+from dash import dcc, html, dash_table
 from dash.dependencies import Input, Output, State
-from dash import dash_table
 import dash_bootstrap_components as dbc
 
 from backend.Portfolio import PortfolioDB, Portfolio, Ticker
@@ -18,16 +16,19 @@ from apps.add_portfolio import New_Portfolio
 from navbar import Navbar
 
 
+
+##########################
+## Check if Mongo has already been initialized
 initialize_MongoDB(username=MONGO_DB_USERNAME, password=MONGO_DB_PWD)
 
 
-import pandas as pd
-import numpy as np
+# import pandas as pd
+# import numpy as np
 
 print("\n**** Portfolio App ****\n")
 print("[Dash version]:", dash.__version__)
-print("[Pandas version]:", pd.__version__)
-print("[Numpy version]:", np.__version__)
+# print("[Pandas version]:", pd.__version__)
+# print("[Numpy version]:", np.__version__)
 
 ##########################
 ## Create the app
@@ -46,8 +47,8 @@ homepage_img_url = app.get_asset_url('homepage_image.svg')
 ## Create the manager of the db (MongoDB)
 pdb = PortfolioDB(mongo_user=MONGO_DB_USERNAME, mongo_pass=MONGO_DB_PWD)
 pdb.get_portfolio('Example')
-pm = pdb.current_portfolio
-ps = pdb.current_simulation
+# pm = pdb.current_portfolio
+# ps = pdb.current_simulation
 
 print("Initialization done")
 
@@ -223,6 +224,7 @@ def display_page(pathname):
     return New_Portfolio(pdb,initial=True)
   else:
     return Homepage(pdb, homepage_img_url)
+
 
 # run the app
 if __name__=='__main__':

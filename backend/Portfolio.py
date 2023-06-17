@@ -179,7 +179,6 @@ class PortfolioSimulation:
         data_pct = round(pct_values,2)
         data_price = round(asset_values,2)
 
-        #least_recent_date = data_price.index.min()
         most_recent_date = data_price.index.max()
 
         univariate = Univariate(parametric=ParametricType.PARAMETRIC)
@@ -257,6 +256,7 @@ class ContentGenerator:
         self._forecast_perfomance_df = None
         
         self._generate()
+
         return
         
     @property
@@ -294,15 +294,30 @@ class ContentGenerator:
     
     
     def _generate(self):
+
+        self._melt_asset_values_by_sector()
         
         self._generate_homepage_capital_growth()
         self._generate_homepage_loser_gainer_df()
         self._generate_homepage_perfomance_df()
         
-        self._generate_allocation_figures()
+        self._generate_current_allocation_pie()
+        self._generate_allocation_change_figures()
+        self._generate_past_allocation_pie()
         
         self._generate_forecast_portfolio_figure()
         
+        return
+    
+    
+    def _melt_asset_values_by_sector(self):
+
+        asset_values = self.portfolio.asset_values
+
+        melted_asset_values = asset_values.melt(ignore_index=False).reset_index()
+        melted_asset_values['sector'] = melted_asset_values['variable'].map(self.stock_sectors).map(self.sectors)
+        self._melted_asset_values = melted_asset_values.sort_values(by='sector')
+
         return
 
 
@@ -310,12 +325,7 @@ class ContentGenerator:
         
         import plotly.express as px
 
-        asset_values = self.portfolio.asset_values
-        pct_values = self.portfolio.pct_values
-
-        melted_asset_values = asset_values.melt(ignore_index=False).reset_index()
-        melted_asset_values['sector'] = melted_asset_values['variable'].map(self.stock_sectors).map(self.sectors)
-        melted_asset_values = melted_asset_values.sort_values(by='sector')
+        melted_asset_values = self._melted_asset_values
 
         fig_capital_growth = px.line(melted_asset_values.groupby('Date').sum()['value'],labels=dict(Date="Last year", value="Capital (EUR)"))
         fig_capital_growth.update_layout(title="Growth in the last year", title_x=0.5,showlegend=False)
@@ -360,24 +370,32 @@ class ContentGenerator:
         return
     
 
-    def _generate_allocation_figures(self):
+    def _generate_current_allocation_pie(self):
 
-        import plotly.express as px
         import plotly.graph_objects as go
 
-        asset_values = self.portfolio.asset_values
+        melted_asset_values = self._melted_asset_values
 
-        melted_asset_values = asset_values.melt(ignore_index=False).reset_index()
-        melted_asset_values['sector'] = melted_asset_values['variable'].map(self.stock_sectors).map(self.sectors)
-        melted_asset_values = melted_asset_values.sort_values(by='sector')
-
+        # most recent pie
         most_recent_date = melted_asset_values['Date'].max()
         
         most_recent_allocation_df = melted_asset_values[melted_asset_values['Date']==most_recent_date].drop('Date', axis=1).groupby('sector').sum().reset_index().sort_values(by='sector')
         
         fig_piesector = go.Figure(data=[go.Pie(values=most_recent_allocation_df.value, labels=most_recent_allocation_df.sector, sort=False) ])
         fig_piesector.update_layout(title="on "+str(most_recent_date),title_x=0.5, margin=dict(t=0, b=0, l=0, r=0))
+        
+        self._allocation_piesector = fig_piesector
 
+        return
+    
+
+    def _generate_allocation_change_figures(self):
+
+        import plotly.express as px
+
+        melted_asset_values = self._melted_asset_values
+
+        # sector growth
         fig_sector_growth = px.area(
             melted_asset_values, x="Date", y="value",
             color="sector", line_group="variable" )
@@ -385,14 +403,22 @@ class ContentGenerator:
         fig_sector_growth.update_xaxes(title_text='Last year')
         fig_sector_growth.update_yaxes(title_text='Value (EUR)')
 
+        self._allocation_sector_growth = fig_sector_growth
+
+
+    def _generate_past_allocation_pie(self):
+
+        import plotly.graph_objects as go
+
+        melted_asset_values = self._melted_asset_values
+
+        # least recent pie
         least_recent_date = melted_asset_values['Date'].min()
         least_recent_allocation_df = melted_asset_values[melted_asset_values['Date']==least_recent_date].drop('Date', axis=1).groupby('sector').sum().reset_index().sort_values(by='sector')
         
-        fig_piesector_initial = go.Figure(data=[go.Pie(values=least_recent_allocation_df.value, labels=most_recent_allocation_df.sector,sort=False) ])
+        fig_piesector_initial = go.Figure(data=[go.Pie(values=least_recent_allocation_df.value, labels=least_recent_allocation_df.sector,sort=False) ])
         fig_piesector_initial.update_layout(title="on "+str(least_recent_date),title_x=0.5, margin=dict(t=0, b=0, l=0, r=0))
-
-        self._allocation_piesector = fig_piesector
-        self._allocation_sector_growth = fig_sector_growth
+        
         self._allocation_piesector_initial = fig_piesector_initial
 
         return
@@ -589,6 +615,7 @@ class PortfolioDB(metaclass=Singleton):
         #                     )
 
         return client
+    
     
     def _get_sectors(self):
         
