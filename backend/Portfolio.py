@@ -1,6 +1,8 @@
 
 import copy
 
+from configuration import MONGO_DB_USERNAME, MONGO_DB_PWD
+
 class Singleton(type):
     _instances = {}
     def __call__(cls, *args, **kwargs):
@@ -575,8 +577,8 @@ class PortfolioDB(metaclass=Singleton):
         from pymongo import MongoClient
         
         client = MongoClient("mongodb",
-                             username='admin',
-                             password='password'
+                             username=MONGO_DB_USERNAME, #'admin',
+                             password=MONGO_DB_PWD, #'password'
                             )
         
         # client = MongoClient("mongodb://localhost:27017/",

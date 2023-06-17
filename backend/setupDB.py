@@ -1,11 +1,12 @@
 from pymongo import MongoClient
 
+from configuration import MONGO_DB_USERNAME, MONGO_DB_PWD
 
 def initialize_MongoDB():
     # Connect to MongoDB
     client = MongoClient("mongodb",
-                        username='admin',
-                        password='password'
+                        username=MONGO_DB_USERNAME, #'admin',
+                        password=MONGO_DB_PWD, #'password'
                         )
     
     # client = MongoClient("mongodb://localhost:27017/",
@@ -36,6 +37,8 @@ def initialize_MongoDB():
         currencies = {
             'CUR_01': 'EUR',
             'CUR_02': 'USD',
+            'CUR_03': 'GBP',
+            'CUR_04': 'CNY'
         }
         collection.insert_one(currencies)
 
