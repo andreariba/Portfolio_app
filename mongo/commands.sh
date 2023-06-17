@@ -7,3 +7,7 @@ docker run -d -it --rm --network mongo-network --name mongo-express -p 8081:8081
 docker compose -f <filename> up
 
 docker build --no-cache -t portfolio-app:latest .
+
+docker login -u "******" -p "******" docker.io
+docker tag portfolio-app arriba87/portfolio-app:latest
+docker push arriba87/portfolio-app:latest
