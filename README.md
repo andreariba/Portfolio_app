@@ -11,15 +11,16 @@ To start the app run the docker compose included in the subfolder mongo/
 ```
 docker compose -f docker-compose-app.yaml up
 ```
-if you cannot direcly retrieve the portfolio-app through compose try first pulling the image from dockerhub:
+if you cannot direcly retrieve the portfolio-app image through compose try first pulling the image from dockerhub:
 ```
 docker pull arriba87/portfolio-app:latest
 ```
-For large portfolio it may take some times (~1 minute) to load the portfolio because the app downloads and runs simulations for the selected portfolio.
+
 
 ## Pages
 
-The dashboard includes 4 pages (/apps).
+For large portfolio it may take some times (~1 minute) to load the selected portfolio because the app downloads and runs simulations for the selected portfolio.
+The dashboard includes 4 pages (/apps):
  1. Homepage. This page allows to manage the different portfolios, i.e. create, delete and edit new or existing portfolios.
 ![home_screenshot](imgs/1_homepage.png)
  2. Overview. Perfomance of the portfolio in the last year, calculates percentage change and volatility (standard deviation of the relative changes). It shows also the top gainers and losers from the last year, useful to have an overview of the current market behaviour.
