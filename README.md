@@ -3,7 +3,7 @@
 Visualize the current value and simulate the future evolution of the input Portfolio.
 The repository is a personal test of different python libraries dash, copula, and pandas_datareader. 
 
-## The portfolio
+## Installation
 
 The portfolio(s) can be managed directly in the app and MongoDB gives persistence to the inputted data. Each asset of the portfolio relates to its ticker (YAHOO format), the number of shares owned, the currency of the assets and the sector (Stocks, Bonds, Sectors, Crypto, Currency, Commodity).
 
@@ -17,7 +17,7 @@ docker pull arriba87/portfolio-app:latest
 ```
 
 
-## Pages
+## The App
 
 For large portfolio it may take some times (~1 minute) to load the selected portfolio because the app downloads and runs simulations for the selected portfolio.
 The dashboard includes 4 pages (/apps):
