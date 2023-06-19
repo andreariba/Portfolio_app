@@ -87,6 +87,9 @@ class YFBridge:
         asset_values = round(close_price_df[symbols],2)
         asset_values = asset_values.fillna(method='ffill')
 
+        asset_values.dropna(axis=0, how="all", inplace=True)
+        pct_values.dropna(axis=0, how="all", inplace=True)
+
         return asset_values, pct_values
 
 

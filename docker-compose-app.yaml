@@ -27,7 +27,7 @@ services:
       - ME_CONFIG_MONGODB_URL=mongodb://admin:password@mongodb:27017/
 
   portfolio-app:
-    image: portfolio-app
+    image: arriba87/portfolio-app
     depends_on:
      - mongodb
     restart: unless-stopped
