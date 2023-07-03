@@ -6,6 +6,7 @@ import dash_bootstrap_components as dbc
 from backend.Portfolio import PortfolioDB, Portfolio, Ticker
 from backend.setupDB import initialize_MongoDB
 from backend.configuration import MONGO_DB_USERNAME, MONGO_DB_PWD
+from backend.NewsSentiment import MarketSentiment, SentimentBullet
 import json
 
 from apps.homepage import Homepage, get_dropdown_select_portfolio_options, DROPDOWN_ADD_NEW_PORTFOLIO_LABEL
@@ -49,6 +50,16 @@ pdb = PortfolioDB(mongo_user=MONGO_DB_USERNAME, mongo_pass=MONGO_DB_PWD)
 pdb.get_portfolio('Example')
 # pm = pdb.current_portfolio
 # ps = pdb.current_simulation
+
+##########################
+## Create the marketsentiment analysis
+ms = MarketSentiment()
+#ms.addWord('SSE 180')
+ms.addWord('Sensex')
+ms.addWord('Nikkei 225')
+ms.addWord('Stoxx 600')
+ms.addWord('S&P 500')
+sb = SentimentBullet(ms.getSentiment())
 
 print("Initialization done")
 
@@ -217,13 +228,13 @@ def display_page(pathname):
   elif pathname=='/allocation':
     return Allocation(pdb)
   elif pathname=='/home':
-    return Homepage(pdb, homepage_img_url)
+    return Homepage(pdb, sb, homepage_img_url)
   elif pathname=='/new': 
     return New_Portfolio(pdb,initial=False)
   elif pathname=='/edit':
     return New_Portfolio(pdb,initial=True)
   else:
-    return Homepage(pdb, homepage_img_url)
+    return Homepage(pdb, sb, homepage_img_url)
 
 
 # run the app
