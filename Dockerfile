@@ -1,8 +1,5 @@
 FROM python:3.11.3-slim
 
-#ENV MONGO_DB_USERNAME=admin \
-#    MONGO_DB_PWD=password
-
 RUN apt-get update && \
     apt-get install -y git
 
@@ -12,7 +9,6 @@ RUN git clone https://github.com/andreariba/Portfolio_app.git
 
 WORKDIR /home/Portfolio_app
 
-#RUN pip install --upgrade pip
 RUN pip install --upgrade pip && \
     pip install \
         pandas \
@@ -23,6 +19,8 @@ RUN pip install --upgrade pip && \
         yfinance \
         newsapi-python \
         transformers
+
+RUN pip3 install torch torchvision torchaudio
 
 CMD ["python", "index.py"]
 
