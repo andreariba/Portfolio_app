@@ -23,12 +23,11 @@ def Homepage(pdb, sb, imageurl):
           ),
           dbc.Col(
             [
-              html.P("Col 2"),
+              html.Img(src=imageurl, width=200, height=200),
             ]
           ),
           dbc.Col(
             [
-              html.Img(src=imageurl, width=200, height=200),
               dcc.Dropdown(
                 id='dropdown-select_portfolio',
                 options=get_dropdown_select_portfolio_options(pdb),
