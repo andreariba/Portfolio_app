@@ -128,7 +128,7 @@ class SentimentBullet:
             i+=1
             
         
-        fig.update_layout(margin=dict(l=0, r=0, t=0, b=0))
+        fig.update_layout(width=800, margin = {'t':0, 'b':0, 'l':20, 'r':0})
         
         self.fig = fig
         

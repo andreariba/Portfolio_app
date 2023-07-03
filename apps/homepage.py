@@ -22,7 +22,6 @@ def Homepage(pdb, sb, imageurl):
           ),
           dbc.Col(
             [
-              html.P("News Sentiment"),
               dcc.Graph( id='graph-news_sentiment', figure=figure_news_sentiment),
             ]
           ),
