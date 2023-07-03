@@ -17,12 +17,13 @@ def Homepage(pdb, sb, imageurl):
         [
           dbc.Col(
             [
-              dcc.Graph( id='graph-news_sentiment', figure=figure_news_sentiment)
+              html.P("News Sentiment"),
+              dcc.Graph( id='graph-news_sentiment', figure=figure_news_sentiment),
             ]
           ),
           dbc.Col(
             [
-              html.Img(src=imageurl),
+              html.Img(src=imageurl, width=300),
               dcc.Dropdown(
                 id='dropdown-select_portfolio',
                 options=get_dropdown_select_portfolio_options(pdb),

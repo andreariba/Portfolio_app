@@ -36,7 +36,7 @@ services:
     environment:
       - MONGO_DB_USERNAME=admin
       - MONGO_DB_PWD=password
-      - NEWSAPI_KEY=*
+      - NEWSAPI_KEY=c55a8c7b53a64182a225516d30392776
     
 volumes:
   db-data:
