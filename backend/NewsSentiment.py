@@ -7,7 +7,8 @@ from datetime import datetime, timedelta
 
 import plotly.graph_objects as go
 
-from configuration import NEWSAPI_KEY
+from backend.configuration import NEWSAPI_KEY
+
 
 class MarketSentiment:
     
