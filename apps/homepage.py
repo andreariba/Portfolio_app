@@ -17,7 +17,7 @@ def Homepage(pdb, sb, imageurl):
         [
           dbc.Col(
             [
-              html.Img(src=imageurl, width=200, height=200),
+              html.Img(src=imageurl),
             ]
           ),
           dbc.Col(
