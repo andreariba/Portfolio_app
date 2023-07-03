@@ -3,12 +3,6 @@ FROM python:3.11.3-slim
 RUN apt-get update && \
     apt-get install -y git
 
-WORKDIR /home
-
-RUN git clone https://github.com/andreariba/Portfolio_app.git
-
-WORKDIR /home/Portfolio_app
-
 RUN pip install --upgrade pip && \
     pip install \
         pandas \
@@ -18,9 +12,18 @@ RUN pip install --upgrade pip && \
         copulas \
         yfinance \
         newsapi-python \
-        transformers
+        transformers \
+        xformers \
+        torch torchvision torchaudio
 
-RUN pip3 install torch torchvision torchaudio
+WORKDIR /home
+
+
+ARG APP_VER=unknown
+
+RUN git clone https://github.com/andreariba/Portfolio_app.git
+
+WORKDIR /home/Portfolio_app
 
 CMD ["python", "index.py"]
 

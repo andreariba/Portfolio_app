@@ -15,10 +15,14 @@ def Homepage(pdb, sb, imageurl):
   body = dbc.Container(
     [html.Center(dbc.Row(
         [
-          dbc.Col([dcc.Graph( id='graph-news_sentiment',figure=figure_news_sentiment )]),
-          dbc.Col([html.Img(src=imageurl)]),
           dbc.Col(
             [
+              dcc.Graph( id='graph-news_sentiment', figure=figure_news_sentiment)
+            ]
+          ),
+          dbc.Col(
+            [
+              html.Img(src=imageurl),
               dcc.Dropdown(
                 id='dropdown-select_portfolio',
                 options=get_dropdown_select_portfolio_options(pdb),
