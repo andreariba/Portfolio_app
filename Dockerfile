@@ -21,7 +21,7 @@ RUN pip install --upgrade pip && \
         pymongo \
         copulas \
         yfinance \
-        newsapi \
+        newsapi-python \
         transformers
 
 CMD ["python", "index.py"]
