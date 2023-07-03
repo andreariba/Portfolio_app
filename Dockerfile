@@ -13,13 +13,16 @@ RUN git clone https://github.com/andreariba/Portfolio_app.git
 WORKDIR /home/Portfolio_app
 
 #RUN pip install --upgrade pip
-RUN pip install \
+RUN pip install --upgrade pip && \
+    pip install \
         pandas \
         dash \
         dash-bootstrap-components \
         pymongo \
         copulas \
-        yfinance
+        yfinance \
+        newsapi \
+        transformers
 
 CMD ["python", "index.py"]
 
