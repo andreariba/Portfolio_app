@@ -17,13 +17,13 @@ def Homepage(pdb, sb, imageurl):
         [
           dbc.Col(
             [
-              html.P("News Sentiment"),
-              dcc.Graph( id='graph-news_sentiment', figure=figure_news_sentiment),
+              html.Img(src=imageurl, width=200, height=200),
             ]
           ),
           dbc.Col(
             [
-              html.Img(src=imageurl, width=200, height=200),
+              html.P("News Sentiment"),
+              dcc.Graph( id='graph-news_sentiment', figure=figure_news_sentiment),
             ]
           ),
           dbc.Col(
