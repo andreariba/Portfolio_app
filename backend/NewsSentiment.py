@@ -107,7 +107,7 @@ class SentimentBullet:
             fig.add_trace(go.Indicator(
                 mode = "delta", value = np.mean([map_sentiment[x] for x in s]),
                 delta = {'reference': 0, 'font': {'size':20}},
-                domain = {'x': [0, 0.2], 'y': [i*0.2+0.1, (i+1)*0.2]},
+                domain = {'x': [0, 0.2], 'y': [i*0.25, (i+1)*0.25]},
                 title = {'text': word, 'font': {'size':10}},
                 gauge = {
                     'shape': "bullet",
@@ -128,7 +128,7 @@ class SentimentBullet:
             i+=1
             
         
-        fig.update_layout(width=200, margin = {'t':0, 'b':0, 'l':40, 'r':0})
+        fig.update_layout(width=100,height=220, margin = {'t':20, 'b':20, 'l':40, 'r':40})
         
         self.fig = fig
         
