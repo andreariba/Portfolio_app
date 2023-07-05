@@ -217,13 +217,13 @@ def display_page(pathname):
   elif pathname=='/allocation':
     return Allocation(pdb)
   elif pathname=='/home':
-    return Homepage(pdb, sb, homepage_img_url)
+    return Homepage(pdb, homepage_img_url)
   elif pathname=='/new': 
     return New_Portfolio(pdb,initial=False)
   elif pathname=='/edit':
     return New_Portfolio(pdb,initial=True)
   else:
-    return Homepage(pdb, sb, homepage_img_url)
+    return Homepage(pdb, homepage_img_url)
 
 
 # run the app
