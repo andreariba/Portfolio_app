@@ -14,9 +14,6 @@ RUN pip install --upgrade pip && \
 
 WORKDIR /home
 
-
-ARG APP_VER=unknown
-
 RUN git clone https://github.com/andreariba/Portfolio_app.git
 
 WORKDIR /home/Portfolio_app
