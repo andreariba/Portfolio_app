@@ -10,11 +10,7 @@ RUN pip install --upgrade pip && \
         dash-bootstrap-components \
         pymongo \
         copulas \
-        yfinance \
-        newsapi-python \
-        transformers \
-        xformers \
-        torch torchvision torchaudio
+        yfinance
 
 WORKDIR /home
 

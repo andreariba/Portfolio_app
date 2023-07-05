@@ -8,9 +8,7 @@ DROPDOWN_ADD_NEW_PORTFOLIO_LABEL = 'Add new portfolio'
 def get_dropdown_select_portfolio_options(pdb):
   return [{'label': i, 'value':i} for i in pdb.portfolios+[DROPDOWN_ADD_NEW_PORTFOLIO_LABEL]]
 
-def Homepage(pdb, sb, imageurl):
-
-  figure_news_sentiment = sb.fig
+def Homepage(pdb, imageurl):
 
   body = dbc.Container(
     [html.Center(dbc.Row(
@@ -18,11 +16,6 @@ def Homepage(pdb, sb, imageurl):
           dbc.Col(
             [
               html.Img(src=imageurl),
-            ]
-          ),
-          dbc.Col(
-            [
-              dcc.Graph( id='graph-news_sentiment', figure=figure_news_sentiment),
             ]
           ),
           dbc.Col(
